@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create Axios instance
 const API = axios.create({
-  baseURL: "/message/user", // change this to your server
+  baseURL: "/api/message/user", // change this to your server
   withCredentials: true, // ✅ Send cookies like JWT token cookie
   headers: {
     "Content-Type": "application/json",

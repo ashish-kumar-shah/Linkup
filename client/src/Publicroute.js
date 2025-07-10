@@ -4,6 +4,7 @@ import { Context } from './Context/Context';
 
 const PublicRoute = ({ children }) => {
   const { User } = useContext(Context);
+console.log('from public route :  ',User);
 
   if (User.loading) {
     return (

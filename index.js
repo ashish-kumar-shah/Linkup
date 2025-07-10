@@ -25,9 +25,10 @@ app.use(cors({
     credentials:true
 }))
 
+app.use(morgan('dev'))
 
 
-const clientBuildPath = path.resolve(__dirname, "./build");
+const clientBuildPath = path.resolve(__dirname, "./client/build");
 console.log(clientBuildPath);
 
 console.log(clientBuildPath);
@@ -48,14 +49,13 @@ if (fs.existsSync(clientBuildPath)) {
 }
 
 
-app.use(morgan('dev'))
 app.get('/',(req,res)=>{
     res.send('your yakyak')
 })
 
-app.use('/auth/user',require('./Router/User.routes'))
-app.use('/message/user',require('./Router/Message.routes'))
-app.use('/services/user',require('./Router/Service.routes'))
+app.use('/api/auth/user',require('./Router/User.routes'))
+app.use('/api/message/user',require('./Router/Message.routes'))
+app.use('/api/services/user',require('./Router/Service.routes'))
 
 
 

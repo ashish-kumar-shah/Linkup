@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create Axios instance
 const API = axios.create({
-  baseURL: "/auth/user", // change this to your server
+  baseURL: "/api/auth/user", // change this to your server
   withCredentials: true, // ✅ Send cookies like JWT token cookie
   headers: {
     "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export const authenticatUser = async ()=>{
     try {
         const response = await API.get('/verify');
     
-        
+        console.log(response)
         return response
     } catch (error) {
         console.log('error while authenticate user',error);

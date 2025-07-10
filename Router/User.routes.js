@@ -11,7 +11,7 @@ const router = require("express").Router();
 router.post('/signinup',handleSignInUp);
 router.get('/verify',verifyToken,authUser)
 router.post('/updatefield',verifyToken,UpdateUserFields)
-router.get('/logout',verifyToken,logout)
+router.get('/logout',logout)
 
 
 module.exports = router

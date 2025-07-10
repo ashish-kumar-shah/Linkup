@@ -6,6 +6,7 @@ import MiddleValidator from "./MiddleValidator";
 const PrivateRoute = ({ children }) => {
   const { User } = useContext(Context);
   const [showValidator, setShowValidator] = useState(false);
+console.log('from private route :  ',User);
 
   useEffect(() => {
     if (User.authenticate && User?.user?.name === "NewUser") {
@@ -48,3 +49,5 @@ const PrivateRoute = ({ children }) => {
 };
 
 export default PrivateRoute;
+
+
