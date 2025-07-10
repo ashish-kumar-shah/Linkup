@@ -1,5 +1,7 @@
 const { createClient } = require("redis");
 require('dotenv').config()
+console.log( process.env.REDIS_URL);
+
 const redisClient = createClient({
   url: process.env.REDIS_URL,
   socket: {
