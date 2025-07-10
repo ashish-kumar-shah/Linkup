@@ -1,20 +1,31 @@
 const { createAdapter } = require('@socket.io/redis-adapter');
 const { createClient } = require('redis');
-const { Server, Socket } = require('socket.io');
+const { Server } = require('socket.io');
 const { setCache, deleteCache, getCache } = require('../Utility/Cache');
+
+require('dotenv').config();
 
 let ioInstance;
 
 async function initSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin:false,
-
+      origin: false,
       credentials: true,
     },
   });
 
-  const pubClient = createClient();
+  const pubClient = createClient({
+    url: process.env.REDIS_URL,
+    socket: {
+      tls: true,
+      reconnectStrategy: retries => {
+        if (retries > 10) return new Error("Redis reconnect limit reached");
+        return Math.min(retries * 50, 500);
+      }
+    }
+  });
+
   const subClient = pubClient.duplicate();
 
   await pubClient.connect();
@@ -45,7 +56,6 @@ async function initSocket(server) {
 
       console.log(`✅ Registered user ${userId} with socket ${socket.id}`);
 
-      // ✅ Broadcast status change to everyone
       io.emit('user-status-change', { userId, status: true });
     });
 
@@ -53,8 +63,6 @@ async function initSocket(server) {
       const userStatus = await getCache(`status:${to}`);
       emitToUser(from, 'user-status-change', { userId: to, status: userStatus !== null });
     });
-
-    
 
     socket.on('typing', ({ to, from }) => {
       emitToUser(to, 'typing', { from });
@@ -80,7 +88,6 @@ async function initSocket(server) {
         await io.redisClient.del(`online:${userId}`);
         console.log(`ℹ️ User ${userId} now offline`);
 
-        // ✅ Broadcast status change to everyone
         io.emit('user-status-change', { userId, status: false });
       }
     });

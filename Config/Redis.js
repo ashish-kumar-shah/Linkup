@@ -1,18 +1,20 @@
 const { createClient } = require("redis");
-require('dotenv').config()
-console.log( 'redis url:  ' ,process.env.REDIS_URL);
+require("dotenv").config();
+
+console.log("REDIS_URL:", process.env.REDIS_URL);
 
 const redisClient = createClient({
   url: process.env.REDIS_URL,
   socket: {
+    tls: true, // ✅ Upstash requires TLS for `rediss://`
     reconnectStrategy: retries => {
       if (retries > 10) return new Error("Redis reconnect limit reached");
       return Math.min(retries * 50, 500);
-    }
-  }
+    },
+  },
 });
 
-redisClient.on("error", err => {
+redisClient.on("error", (err) => {
   console.error("❌ Redis error:", err);
 });
 
