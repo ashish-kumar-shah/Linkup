@@ -7,23 +7,31 @@ const UserList = () => {
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    getUsers()
-      .then((res) => {
-       
-        setUserList(res.data.data);
-      })
-      .catch((err) => {
+    const fetchUsers = async () => {
+      try {
+        const res = await getUsers();
+        const users = res?.data?.data;
+        setUserList(Array.isArray(users) ? users : []);
+      } catch (err) {
+        console.error("Error fetching users:", err);
         setUserList([]);
-      
-      });
-  }, []);
+      }
+    };
+
+    fetchUsers();
+  }, [getUsers]);
 
   return (
     <div className="w-full h-full flex flex-col overflow-y-auto hide-scrollbar scroll-smooth p-1">
-      {userList.length > 0 &&
-        userList.map((e, i) => (
-          <UserListCard key={i} data={e}  /> // ✅
-        ))}
+      {Array.isArray(userList) && userList.length > 0 ? (
+        userList.map((user, index) => (
+          <UserListCard key={index} data={user} />
+        ))
+      ) : (
+        <div className="text-center text-gray-500 p-4">
+          No users found.
+        </div>
+      )}
     </div>
   );
 };
